@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>NETON Support Bot</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+body{font-family:system-ui,sans-serif;max-width:720px;margin:0 auto;padding:16px;background:#f6f7f9}
+#log{background:#fff;border-radius:10px;padding:12px;min-height:50vh;overflow:auto}
+.u{background:#e6f0ff;padding:8px 12px;border-radius:10px;margin:8px 0;white-space:pre-wrap}
+.b{background:#f1f1f1;padding:8px 12px;border-radius:10px;margin:8px 0;white-space:pre-wrap}
+.s{font-size:12px;color:#666;margin-top:4px}
+form{display:flex;gap:8px;margin-top:12px}input,select{padding:10px;border:1px solid #ccc;border-radius:8px}
+input{flex:1}button{padding:10px 16px;border:0;border-radius:8px;background:#0b5fff;color:#fff}
+</style></head><body>
+<h2>NETON Support Bot</h2>
+<div id="log"></div>
+<form id="f">
+<select id="brand"><option value="">All brands</option><option>wildix</option><option>dinstar</option><option>grandstream_sangoma</option></select>
+<input id="q" placeholder="Ask a question..." autocomplete="off" required>
+<button>Ask</button>
+</form>
+<script>
+const log=document.getElementById('log'),history=[];
+function add(cls,text,src){const d=document.createElement('div');d.className=cls;d.textContent=text;
+ if(src&&src.length){const s=document.createElement('div');s.className='s';s.textContent='Sources: '+src.join(', ');d.appendChild(s)}
+ log.appendChild(d);log.scrollTop=log.scrollHeight;return d}
+document.getElementById('f').onsubmit=async e=>{
+ e.preventDefault();const q=document.getElementById('q').value;document.getElementById('q').value='';
+ add('u',q);const wait=add('b','Thinking...');
+ try{const r=await fetch('/chat',{method:'POST',headers:{'Content-Type':'application/json'},
+  body:JSON.stringify({question:q,brand:document.getElementById('brand').value||null,history})});
+  const j=await r.json();wait.remove();add('b',j.answer,j.sources);
+  history.push({role:'user',content:q},{role:'assistant',content:j.answer});
+ }catch(err){wait.textContent='Error: '+err}};
+</script></body></html>

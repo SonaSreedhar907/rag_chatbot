@@ -1,0 +1,5 @@
+.env
+.venv/
+vectordb/
+__pycache__/
+data/raw/

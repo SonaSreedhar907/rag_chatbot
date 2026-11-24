@@ -1,0 +1,10 @@
+pypdf
+pandas
+openpyxl
+chromadb
+sentence-transformers
+requests
+python-dotenv
+fastapi
+uvicorn
+anthropic
